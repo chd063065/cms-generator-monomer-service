@@ -1,0 +1,1109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<baseDao>
+<![CDATA[package ${packageDao};
+
+import java.util.List;
+
+public interface BaseMapper<T, S> {
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-16
+	 */
+	int deleteByPrimaryKey(Long id);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-16
+	 */
+	int insert(T record);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-16
+	 */
+	int insertSelective(T record);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-16
+	 */
+	T selectByPrimaryKey(Long id);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-16
+	 */
+	int updateByPrimaryKeySelective(T record);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-16
+	 */
+	int updateByPrimaryKey(T record);
+
+	List<T> list(S record);
+
+	int deleteBatch(List<Long> list);
+}]]>
+</baseDao>
+<mapperDao>
+<![CDATA[package ${packageDao};
+
+import org.apache.ibatis.annotations.Mapper;
+
+import ${packagePojo}.${UpSources}Pojo;
+import ${packageVo}.${UpSources}Vo;
+
+@Mapper
+public interface ${UpSources}PojoMapper extends BaseMapper<${UpSources}Pojo, ${UpSources}Vo> {
+	
+}]]>
+</mapperDao>
+<baseService>
+<![CDATA[package ${packageService};
+
+import com.github.pagehelper.PageInfo;
+
+public interface BaseService<T, S> {
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	int deleteByPrimaryKey(Long id);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	int insert(T record);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	int insertSelective(T record);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	T selectByPrimaryKey(Long id);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	int updateByPrimaryKeySelective(T record);
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	int updateByPrimaryKey(T record);
+
+	PageInfo<T> list(S record);
+
+	int deleteBatch(String ids);
+}]]>
+</baseService>
+<serviceInterface>
+<![CDATA[package ${packageService};
+
+import ${packagePojo}.${UpSources}Pojo;
+import ${packageVo}.${UpSources}Vo;
+
+public interface ${UpSources}Service extends BaseService<${UpSources}Pojo, ${UpSources}Vo> {
+
+}
+]]>
+</serviceInterface>
+<listSql>
+<![CDATA[  <select id="list" resultType="${packagePojo}.${UpSources}Pojo" parameterType="${packageVo}.${UpSources}Vo">
+  	select 
+     ${selectFields}
+	from ${tableName}
+    <where>
+			${whereFieldsSql}
+	</where>
+  </select>]]>
+</listSql>
+<deleteBatchSql>
+<![CDATA[	<delete id="deleteBatch" parameterType="java.util.List">
+		delete from ${tableName} 	where id in
+		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>]]>
+</deleteBatchSql>
+<whereFieldsSql>
+<![CDATA[			<if test="${javaFieid}">
+				AND ${jdbcFieid}
+			</if>]]>
+</whereFieldsSql>
+<page>
+<![CDATA[package ${packageVo};
+
+import java.io.Serializable;
+
+import io.swagger.annotations.ApiModelProperty;
+
+public class Page implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8773597375912946035L;
+	// 第几页
+	@ApiModelProperty(value = "page", hidden = true)
+	private int page;
+	// 每页显示多少行
+	@ApiModelProperty(value = "limit", hidden = true)
+	private int limit;
+	// 排序字段
+	@ApiModelProperty(value = "sort", hidden = true)
+	private String sort;
+	// 升序还是降序
+	@ApiModelProperty(value = "order", hidden = true)
+	private String order;
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+}]]>
+</page>
+<htmlList><![CDATA[<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:include="include/includebase"></head>
+
+<head>
+<meta charset="utf-8" />
+<title>用户登录记录</title>
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0px;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form class="form-inline" role="form" style="float: left; width: 100%;margin-left: 20px;" method="post" id="${DownSources}-form">
+                ${formLine}
+                <div class="form-group">
+                    <button type="button" id="queryBtn" onclick="doQuery();" class="btn btn-primary">查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="${DownSources}-table" style="margin-top:0px;">
+    					
+    </table>
+</div>
+<script th:inline="javascript">
+ 
+    $(function() {
+        initTable();
+        $('#${DownSources}-table').bootstrapTable('hideColumn', 'id');
+    });
+    
+    function doQuery(){
+        $('#${DownSources}-table').bootstrapTable('refresh');    //刷新表格
+    }
+    $(document).on("click",".del",function(){
+		var id = $(this).attr("data-id");
+		window.Ewin.confirm({title:'提示',message:'是否要删除您所选择的记录？',width:500}).on(function (e) {
+            if (e) {
+                $.get("delete/"+id,function(e){
+                   if(e.retCode==200){
+                       window.Ewin.alert({message:e.message});
+                       doQuery();
+                   }
+                });
+            }
+        });
+	});
+	
+	$(document).on("click",".update",function(){
+		var id = $(this).attr("data-id");
+		window.Ewin.dialog({title:"修改",url:"./update?id="+id,width:600,height:600});
+	});
+ 
+    function initTable(){
+        $('#${DownSources}-table').bootstrapTable({
+        	method:"post",
+            dataType: "json",            
+            contentType: "application/json",
+        	url:"../${DownSources}/list",
+            height: $(window.parent.document).find("#wrapper").height() - 252,
+            width:$(window).width(),
+            showColumns:true,
+            formId :"${DownSources}-form",
+            pagination : true,
+            sortName : 'id',
+            sortOrder : 'desc',
+            striped:true,
+            pageSize : 10,
+            pageNumber: 1,  
+            pageList: [10, 20, 50, 100, 200, 500],
+            toolbars:[
+                {
+                    text: '添加',
+                    iconCls: 'glyphicon glyphicon-plus',
+                    handler: function () {
+                        window.Ewin.dialog({title:"添加",url:"add",width:600,height:600})
+                    }
+                },
+                {
+                    text: '修改',
+                    iconCls: 'glyphicon glyphicon-pencil',
+                    handler: function () {
+                        var rows = $('#${DownSources}-table').bootstrapTable('getSelections');
+                        if(rows.length==0||rows.length>1){
+                            window.Ewin.alert({message:'请选择一条需要修改的数据!'});
+                            return false;
+                        }
+                        window.Ewin.dialog({title:"修改",url:"update?id="+rows[0].id,width:600,height:600});
+                    }
+                },
+                {
+                    text: '删除',
+                    iconCls: 'glyphicon glyphicon-remove',
+                    handler: function () {
+                        var rows = $('#${DownSources}-table').bootstrapTable('getSelections');
+                        if(rows.length==0){
+                            window.Ewin.alert({message:'请选择一条需要删除的数据!'});
+                            return false;
+                        }
+                        var ids="";
+                        $.each( rows, function(index, val) {
+                        	if(index+1==rows.length){
+                            	ids+=val.id;
+                        	}else{
+                            	ids+=val.id+"-";
+                        	}
+                        });
+                        window.Ewin.confirm({title:'提示',message:'是否要删除您所选择的记录？',width:500}).on(function (e) {
+                            if (e) {
+                            	$.get("deleteBatch/"+ids,function(e){
+                                    if(e.retCode==200){
+                                        window.Ewin.alert({message:e.message});
+                                        doQuery();
+                                    }
+                                 });
+                            }
+                        });
+                    }
+                }
+            ], 
+            columns: [
+                {
+                    checkbox: true
+                },
+                {
+                    field: '',
+                    title: '序号',
+                    formatter: function (value, row, index) {
+                        return index+1;
+                    }
+                },
+                {
+                    field : 'id',
+                    title : '流水',
+                    align : 'center',
+                    valign : 'middle',
+                    sortable : true
+                },
+                ${columnsLine}
+                {
+                	field : '',
+                    title : '操作',
+                    align : 'center',
+                    valign : 'middle',
+                  	formatter : function(value, row, index) {
+  						var links = '';
+  					 	links += '<a title="删除" class="btn-sm btn-danger del" data-id="'+row.id+'"> <i class="fa fa-trash-o"></i></a> ';
+  					 	links += '<a title="修改" class="btn-sm btn-primary update" data-id="'+row.id+'"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
+  					 	return links;
+  					}
+  				}]
+        });
+    }
+</script>
+</body>
+</html>]]>
+</htmlList>
+<htmlAdd><![CDATA[<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<form id="${DownSources}Form"  role="form" method="post" action="${DownSources}/add">
+    <div class="row">
+        <div class="col-md-12">
+            ${formLine}
+        </div>
+    </div>
+</form>
+<script th:inline="javascript">
+    ${startCDATA}
+    $(function () {
+        $('#${DownSources}Form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            	paramName: {
+                    message: '参数名称验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '参数名称不能为空'
+                        } 
+                    }
+                },
+                paramValue: {
+                    message: '参数值验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '参数值不能为空'
+                        }
+                    }
+                }
+            }
+        })
+        // 绑定dialog的确定按钮的监听事件
+        $("#btnOk",window.top.document).click(function() {
+            var bootstrapValidator = $("#${DownSources}Form", window.top.document).data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+                var data={};
+                $.each($("#${DownSources}Form").find("input"),function(index,info){
+                	if(info.value!=""){
+                		data[info.name]=info.value;
+                	}
+                });
+                $.each($("#${DownSources}Form").find("select"),function(index,info){
+                	if(info.value!=""){
+                		data[info.name]=info.value;
+                	}
+                })
+                $.ajax({
+                	url: $("#${DownSources}Form",window.top.document).attr('action'),
+                	type: "POST",
+                	datType: "JSON",
+                	contentType: "application/json",
+                	data: JSON.stringify(data),
+                	async: false,
+                	success: function (e) {
+                		if(e.retCode==200){
+                            $('.modal-dialog', window.top.document).parent('div').remove()
+                            $('body', window.top.document).find('.modal-backdrop').remove();
+                            window.Ewin.alert({message:e.message});
+                            $(window.parent.document).contents().find(".tab-pane.active iframe")[0].contentWindow.doQuery();
+                        }else{
+                            window.Ewin.alert({message:e.message});
+                        }
+                	}
+                });
+            }
+        });
+
+    })
+    ${endCDATA}
+</script>
+</body>
+</html>]]>
+</htmlAdd>
+<htmlUpdate><![CDATA[<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<form id="${DownSources}Form"  role="form" method="post" action="${DownSources}/update">
+    <div class="row">
+        <div class="col-md-12">
+            <input type="hidden" name="id" id="roleId" th:value="${data.id}" />
+            ${formUpdateLine}
+        </div>
+    </div>
+</form>
+<script th:inline="javascript">
+    ${startCDATA}
+    $(function () {
+    	$("#remark").val($("#remarkVal").val());
+        $('#${DownSources}Form').bootstrapValidator({
+        	message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            	paramName: {
+                    message: '参数名称验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '参数名称不能为空'
+                        } 
+                    }
+                },
+                paramValue: {
+                    message: '参数值验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '参数值不能为空'
+                        }
+                    }
+                }
+            }
+        })
+
+        // 绑定dialog的确定按钮的监听事件
+        $("#btnOk",window.top.document).click(function() {
+           
+            var bootstrapValidator = $("#${DownSources}Form", window.top.document).data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+                var data={};
+                $.each($("#${DownSources}Form").find("input"),function(index,info){
+                	if(info.value!=""){
+                		data[info.name]=info.value;
+                	}
+                });
+                $.each($("#${DownSources}Form").find("select"),function(index,info){
+                	if(info.value!=""){
+                		data[info.name]=info.value;
+                	}
+                })
+                $.ajax({
+                	url: $("#${DownSources}Form",window.top.document).attr('action'),
+                	type: "POST",
+                	datType: "JSON",
+                	contentType: "application/json",
+                	data: JSON.stringify(data),
+                	async: false,
+                	success: function (e) {
+                		if(e.retCode==200){
+                            $('.modal-dialog', window.top.document).parent('div').remove()
+                            $('body', window.top.document).find('.modal-backdrop').remove();
+                            window.Ewin.alert({message:e.message});
+                            $(window.parent.document).contents().find(".tab-pane.active iframe")[0].contentWindow.doQuery();
+                        }else{
+                            window.Ewin.alert({message:e.message});
+                        }
+                	}
+                });
+            }
+        });
+    })
+    ${endCDATA}
+</script>
+</body>
+</html>]]>
+</htmlUpdate>
+<formLine><![CDATA[	<div class="form-group">
+                    <label for="${property}">${propertyName}:</label>
+                    <input type="text" class="form-control" name="${property}" id="${property}"  placeholder="${property}" />
+                </div>]]></formLine>
+<columnsLine><![CDATA[{
+                    field : '${property}',
+                    title : '${propertyName}',
+                    align : 'center',
+                    valign : 'middle',
+                    sortable : true
+                },]]></columnsLine>
+<columnsDateLine><![CDATA[{
+                    field : '${property}',
+                    title : '${propertyName}',
+                    align : 'center',
+                    valign : 'middle',
+                    sortable : true,
+                    formatter: function (value, row, index) {
+                    	if(value=='') return "";
+                    	return new Date(value).Format("yyyy-MM-dd hh:mm:ss.S");
+                    }
+                },]]></columnsDateLine>
+<formUpdateLine><![CDATA[	<div class="form-group" >
+                <label for="${property}">${propertyName}:</label>
+                <input type="text" class="form-control" name="${property}" id="${property}" th:value="${data.${property}}" />
+            </div>]]></formUpdateLine>
+<htmlController><![CDATA[package ${packageHtmlController};
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import ${packageApi}.respone.Result;
+import ${packageFeignService}.I${UpSources}ClientService;
+
+import net.sf.json.JSONObject;
+
+@Controller
+@RequestMapping("${DownSources}")
+public class ${UpSources}Controller {
+
+	private static Logger LOGGER = LoggerFactory.getLogger(${UpSources}Controller.class);
+	
+	@Resource
+	private I${UpSources}ClientService ${DownSources}ClientService;
+
+	@RequestMapping("/list")
+	public String list() {
+		return "${DownSources}/list";
+	}
+
+	@SuppressWarnings("rawtypes")
+	@RequestMapping("/update")
+	public String update(Long id, Model model) {
+		try {
+			Object o = this.${DownSources}ClientService.get(id);
+			JSONObject json = JSONObject.fromObject(o);
+			Result result = new Result<Object>((String) json.get("message"), (int) json.get("retCode"),
+					json.get("data"));
+			model.addAttribute("data", result.getData());
+		} catch (Exception e) {
+			LOGGER.error("服务端异常", e);
+		}
+		return "${DownSources}/update";
+	}
+
+	@RequestMapping("/add")
+	public String add() {
+		return "${DownSources}/add";
+	}
+
+}
+]]></htmlController>
+<rest>
+<![CDATA[
+package ${packageRest};
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import ${packagePojo}.${UpSources}Pojo;
+import ${packageApi}.respone.CodeMsg;
+import ${packageApi}.respone.Result;
+import ${packageVo}.${UpSources}Vo;
+import ${packageService}.${UpSources}Service;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+
+@RestController
+@RequestMapping("/${DownSources}")
+@Api(value = "${UpSources}类", tags = "${UpSources}接口")
+public class ${UpSources}Rest {
+
+	private static Logger LOGGER = LoggerFactory.getLogger(${UpSources}Rest.class);
+
+	@Autowired
+	private ${UpSources}Service ${DownSources}Service;
+
+	@Resource
+	private DiscoveryClient client;
+
+	@RequestMapping("/discover")
+	public Object discover() {
+		return this.client;
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	@ApiOperation(value = "根据ID删除数据", notes = "删除接口")
+	@ApiImplicitParam(dataType = "Long", name = "id", value = "ID", required = true, paramType = "path")
+	public Result<Long> deleteByPrimaryKey(@PathVariable("id") Long id) {
+		long num = ${DownSources}Service.deleteByPrimaryKey(id);
+		if (num > 0) {
+			return Result.success(num);
+		} else {
+			return Result.error(CodeMsg.FAILIN, "");
+		}
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/deleteBatch/{ids}", method = RequestMethod.GET)
+	@ApiOperation(value = "批量根据ID删除数据", notes = "批量删除接口，多个id使用\"-\"分隔")
+	@ApiImplicitParam(dataType = "String", name = "ids", value = "ids", required = true, paramType = "path")
+	public Result<Long> deleteBatch(@PathVariable("ids") String ids) {
+		long num = ${DownSources}Service.deleteBatch(ids);
+		if (num > 0) {
+			return Result.success(num);
+		} else {
+			return Result.error(CodeMsg.FAILIN, "");
+		}
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@ApiOperation(value = "新增数据", notes = "根据数据对象新增数据")
+	@ApiImplicitParam(dataType = "${UpSources}Vo", name = "record", value = "提交数据对象", required = true, paramType = "body")
+	public Result<Long> insert(@RequestBody ${UpSources}Vo record) {
+		try {
+			${UpSources}Pojo dest = new ${UpSources}Pojo();
+			BeanUtils.copyProperties(dest, record);
+			long num = ${DownSources}Service.insertSelective(dest);
+			if (num > 0) {
+				return Result.success(num);
+			} else {
+				return Result.error(CodeMsg.FAILIN, "");
+			}
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			LOGGER.error("", e);
+			return Result.error(CodeMsg.PARAMETER_ERROR);
+		}
+
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+	@ApiOperation(value = "根据主键ID查询数据", notes = "数据查询接口")
+	@ApiImplicitParam(dataType = "Long", name = "id", value = "ID", required = true, paramType = "path")
+	public Result<${UpSources}Pojo> selectByPrimaryKey(@PathVariable("id") Long id) {
+		${UpSources}Pojo t = ${DownSources}Service.selectByPrimaryKey(id);
+		if (null != t) {
+			return Result.success(t);
+		} else {
+			return Result.error(CodeMsg.FAILIN, "");
+		}
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ApiOperation(value = "修改数据", notes = "根据回传数据对象进行修改数据")
+	@ApiImplicitParam(dataType = "${UpSources}Vo", name = "record", value = "修改数据对象", required = true, paramType = "body")
+	public Result<Long> updateByPrimaryKeySelective(@RequestBody ${UpSources}Vo record) {
+		try {
+			${UpSources}Pojo dest = new ${UpSources}Pojo();
+			BeanUtils.copyProperties(dest, record);
+			long num = ${DownSources}Service.updateByPrimaryKeySelective(dest);
+			if (num > 0) {
+				return Result.success(num);
+			} else {
+				return Result.error(CodeMsg.FAILIN, "");
+			}
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			LOGGER.error("", e);
+			return Result.error(CodeMsg.PARAMETER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	@ApiOperation(value = "分页查询", notes = "根据查询条件查询数据")
+	@ApiImplicitParam(dataType = "${UpSources}Vo", name = "record", value = "查询条件", required = true, paramType = "body")
+	public Result<Map<String, Object>> list(@RequestBody ${UpSources}Vo record) {
+		PageInfo<${UpSources}Pojo> page = ${DownSources}Service.list(record);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rows", page.getList());
+		map.put("total", page.getTotal());
+		return Result.success(map);
+	}
+}
+]]>
+</rest>
+<feignRest><![CDATA[package ${packageFeignRest};
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${packagePojo}.${UpSources}Pojo;
+import ${packageApi}.respone.Result;
+import ${packageVo}.${UpSources}Vo;
+import ${packageFeignService}.I${UpSources}ClientService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+
+@RestController
+@RequestMapping("/${DownSources}")
+@Api(value = "${UpSources}类", tags = "${UpSources}接口")
+public class ${UpSources}Rest {
+
+	private static Logger LOGGER = LoggerFactory.getLogger(${UpSources}Rest.class);
+	@Resource
+	private I${UpSources}ClientService ${DownSources}ClientService;
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	@ApiOperation(value = "根据ID删除数据", notes = "删除接口")
+	@ApiImplicitParam(dataType = "Long", name = "id", value = "ID", required = true, paramType = "path")
+	public Object deleteByPrimaryKey(@PathVariable("id") Long id) {
+		try {
+			return ${DownSources}ClientService.delete(id);
+		} catch (Exception e) {
+			LOGGER.error("服务端异常", e);
+		}
+		return Result.error();
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/deleteBatch/{ids}", method = RequestMethod.GET)
+	@ApiOperation(value = "批量根据ID删除数据", notes = "批量删除接口，多个id使用\"-\"分隔")
+	@ApiImplicitParam(dataType = "String", name = "ids", value = "ids", required = true, paramType = "path")
+	public Object deleteBatch(@PathVariable("ids") String ids) {
+		try {
+			return ${DownSources}ClientService.deleteBatch(ids);
+		} catch (Exception e) {
+			LOGGER.error("服务端异常", e);
+		}
+		return Result.error();
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@ApiOperation(value = "新增数据", notes = "根据数据对象新增数据")
+	@ApiImplicitParam(dataType = "${UpSources}Vo", name = "record", value = "提交数据对象", required = true, paramType = "body")
+	public Object add(@RequestBody ${UpSources}Vo record) {
+		try {
+			return ${DownSources}ClientService.add(record);
+		} catch (Exception e) {
+			LOGGER.error("服务端异常", e);
+		}
+		return Result.error();
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+	@ApiOperation(value = "根据主键ID查询数据", notes = "数据查询接口")
+	@ApiImplicitParam(dataType = "Long", name = "id", value = "ID", required = true, paramType = "path")
+	public Object selectByPrimaryKey(@PathVariable("id") Long id) {
+		try {
+			return ${DownSources}ClientService.get(id);
+		} catch (Exception e) {
+			LOGGER.error("服务端异常", e);
+		}
+		return Result.error();
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ApiOperation(value = "修改数据", notes = "根据回传数据对象进行修改数据")
+	@ApiImplicitParam(dataType = "${UpSources}Vo", name = "record", value = "修改数据对象", required = true, paramType = "body")
+	public Object updateByPrimaryKeySelective(@RequestBody ${UpSources}Vo record) {
+		try {
+			return ${DownSources}ClientService.update(record);
+		} catch (Exception e) {
+			LOGGER.error("服务端异常", e);
+		}
+		return Result.error();
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	@ApiOperation(value = "分页查询", notes = "根据查询条件查询数据")
+	@ApiImplicitParam(dataType = "${UpSources}Vo", name = "record", value = "查询条件", required = true, paramType = "body")
+	public Object list(@RequestBody ${UpSources}Vo record) {
+		try {
+			return ${DownSources}ClientService.list(record);
+		} catch (Exception e) {
+			LOGGER.error("服务端异常", e);
+		}
+		return Result.error();
+	}
+}
+]]></feignRest>
+<feignService><![CDATA[package ${packageFeignService};
+
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+
+import ${packageApi}.utils.Constant;
+import ${packageApi}.vo.${UpSources}Vo;
+import com.shenlong.commons.config.FeignClientConfig;
+import ${packageFeignServiceFallBack}.I${UpSources}ClientServiceFallbackFactory;
+
+@FeignClient(value = Constant.SHENLONG_PROVIDER, configuration = FeignClientConfig.class, fallbackFactory = I${UpSources}ClientServiceFallbackFactory.class)
+public interface I${UpSources}ClientService {
+
+	@RequestMapping(method = RequestMethod.POST, value = "/${DownSources}/add")
+	Object add(@RequestBody ${UpSources}Vo record);
+
+	@RequestMapping(method = RequestMethod.GET, value = "/${DownSources}/get/{id}")
+	Object get(@PathVariable("id") Long id);
+
+	@RequestMapping(method = RequestMethod.POST, value = "/${DownSources}/list")
+	Object list(@RequestBody ${UpSources}Vo record);
+
+	@RequestMapping(method = RequestMethod.POST, value = "/${DownSources}/update")
+	Object update(${UpSources}Vo record);
+
+	@RequestMapping(method = RequestMethod.GET, value = "/${DownSources}/delete/{id}")
+	Object delete(@PathVariable("id") Long id);
+
+	@RequestMapping(method = RequestMethod.GET, value = "/${DownSources}/deleteBatch/{ids}")
+	Object deleteBatch(@PathVariable("ids") String ids);
+
+}
+]]></feignService>
+<feignServiceFallBack><![CDATA[package ${packageFeignServiceFallBack};
+
+import java.util.Map;
+
+import org.springframework.stereotype.Component;
+
+import ${packageApi}.pojo.${UpSources}Pojo;
+import ${packageApi}.respone.CodeMsg;
+import ${packageApi}.respone.Result;
+import ${packageApi}.vo.${UpSources}Vo;
+import ${packageFeignService}.I${UpSources}ClientService;
+
+import feign.hystrix.FallbackFactory;
+
+@Component
+public class I${UpSources}ClientServiceFallbackFactory implements FallbackFactory<I${UpSources}ClientService> {
+
+	@Override
+	public I${UpSources}ClientService create(Throwable arg0) {
+
+		return new I${UpSources}ClientService() {
+
+			@Override
+			public Result<Long> add(${UpSources}Vo record) {
+				return Result.error(CodeMsg.PROVIDER_ERROR);
+			}
+
+			@Override
+			public Result<${UpSources}Pojo> get(Long id) {
+				return Result.error(CodeMsg.PROVIDER_ERROR);
+			}
+
+			@Override
+			public Result<Map<String, Object>> list(${UpSources}Vo record) {
+				return Result.error(CodeMsg.PROVIDER_ERROR);
+			}
+
+			@Override
+			public Result<Long> update(${UpSources}Vo record) {
+				return Result.error(CodeMsg.PROVIDER_ERROR);
+			}
+
+			@Override
+			public Result<Long> delete(Long id) {
+				return Result.error(CodeMsg.PROVIDER_ERROR);
+			}
+
+			@Override
+			public Result<Long> deleteBatch(String ids) {
+				return Result.error(CodeMsg.PROVIDER_ERROR);
+			}
+
+		};
+	}
+}
+]]></feignServiceFallBack>
+
+<baseServiceImpl>
+<![CDATA[package ${packageServiceImpl};
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import ${packageVo}.Page;
+import ${packageDao}.BaseMapper;
+import ${packageService}.BaseService;
+
+public abstract class BaseServiceImpl<T, S extends Page> implements BaseService<T, S> {
+
+	@Autowired
+	protected BaseMapper<T, S> baseMapper;
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	public int deleteByPrimaryKey(Long id) {
+		return baseMapper.deleteByPrimaryKey(id);
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	public int insert(T record) {
+		return baseMapper.insert(record);
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	public T selectByPrimaryKey(Long id) {
+		return baseMapper.selectByPrimaryKey(id);
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	public int updateByPrimaryKeySelective(T record) {
+		return baseMapper.updateByPrimaryKeySelective(record);
+	}
+
+	public PageInfo<T> list(S record) {
+		if (StringUtils.isNotBlank(record.getSort())) {
+			PageHelper.startPage(record.getPage(), record.getLimit(), record.getSort() + " " + record.getOrder());
+		} else {
+			PageHelper.startPage(record.getPage(), record.getLimit());
+		}
+		List<T> result = baseMapper.list(record);
+		return new PageInfo<>(result);
+	}
+
+	@Override
+	public int deleteBatch(String ids) {
+		if (StringUtils.isBlank(ids)) {
+			return 0;
+		}
+		String[] id = ids.split("-");
+		List<Long> list = new ArrayList<Long>();
+		for (String s : id) {
+			list.add(Long.valueOf(s));
+		}
+		return baseMapper.deleteBatch(list);
+	}
+}]]>
+</baseServiceImpl>
+<serviceImpl>
+<![CDATA[package ${packageServiceImpl};
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ${packagePojo}.${UpSources}Pojo;
+import ${packageVo}.${UpSources}Vo;
+import ${packageDao}.${UpSources}PojoMapper;
+import ${packageService}.${UpSources}Service;
+
+@Service
+public class ${UpSources}ServiceImpl extends BaseServiceImpl<${UpSources}Pojo, ${UpSources}Vo> implements ${UpSources}Service {
+
+	@Autowired
+	private ${UpSources}PojoMapper ${DownSources}PojoMapper;
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	public int insertSelective(${UpSources}Pojo record) {
+		record.setCreateTime(new Date());
+		record.setLastUpdateTime(new Date());
+		return baseMapper.insertSelective(record);
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	public int updateByPrimaryKeySelective(${UpSources}Pojo record) {
+		record.setLastUpdateTime(new Date());
+		return baseMapper.updateByPrimaryKeySelective(record);
+	}
+
+	/**
+	 *
+	 * @mbggenerated 2018-08-29
+	 */
+	public int updateByPrimaryKey(${UpSources}Pojo record) {
+		record.setLastUpdateTime(new Date());
+		return baseMapper.updateByPrimaryKey(record);
+	}
+
+}]]>
+</serviceImpl>
+</root>
